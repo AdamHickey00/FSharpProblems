@@ -1,3 +1,6 @@
+// write a function to determine if any of the permutations of
+// a string are a palindrome  
+
 let reverse x = 
   x |> List.fold(fun acc y -> y.ToString() + acc) ""
 
