@@ -18,3 +18,20 @@ let rec partitions = function
     @ [for x in partitions (n-3) -> 3::x]
 
 partitions 4
+
+// second more generic solution
+let addBefore n f i =
+  if i <= n then
+    [for x in f (n-i) -> i::x]
+  else 
+    []
+
+let rec partitionsGeneric parts n = 
+  let rec loop = function 
+    | 0 -> [[]]
+    | _ as n -> parts |> List.collect (addBefore n loop)
+
+  loop n
+  
+partitions 4
+partitionsGeneric [1..3] 4
