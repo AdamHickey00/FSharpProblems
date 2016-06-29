@@ -23,3 +23,12 @@ let subsets x =
   loop2 0
 
 subsets [1; 2; 3; 4]
+
+// cleaner solution
+let rec subsets2 x = 
+  match x with 
+  | [] -> [[]]
+  | [y] -> [] :: [x]
+  | head::tail -> subsets2 tail @ [for y in subsets2 tail -> head :: y]
+
+subsets2 [1; 2; 3; 4]
