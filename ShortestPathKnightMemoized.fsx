@@ -32,7 +32,7 @@ let fromCache board (r,c) path (cache: (int*int) list [] []) f =
       shortest
 
     | _ as calculatedPath ->
-      printfn "wtf returning cached path of %A" calculatedPath 
+      printfn "returning cached path of %A" calculatedPath 
       // replace if current path is shorter
        
       // if List.length path < List.length calculatedPath then
