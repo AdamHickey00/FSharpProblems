@@ -6,29 +6,10 @@
 
 // input: [1; 2; 3; 4]
 // output: [] [1] [2] [3] [4] [1; 2] [1; 3] [1; 4] [2; 3] [2; 4] [3; 4] [1; 2; 3] [1; 2; 4] [2; 3; 4] [1; 2; 3; 4]
-let rec loop n x y =
-  match n,y with
-  | 0,_ -> [[]]
-  | _ when n > (x |> List.length) -> []    
-  | _,[] -> loop (n+1) x y
-  | _,h::t ->    
-    [for xs in loop (n-1) x t -> h::xs] @ (loop n x t)
 
-let subsets x = 
-  let rec loop2 n = 
-    match n with 
-    | _ when n > (x |> List.length) -> []
-    | _ -> (loop n x x) @ (loop2 (n+1))
-
-  loop2 0
-
-subsets [1; 2; 3; 4]
-
-// cleaner solution
-let rec subsets2 x = 
-  match x with 
+let rec subsets = function 
   | [] -> [[]]
-  | [y] -> [] :: [x]
-  | head::tail -> subsets2 tail @ [for y in subsets2 tail -> head :: y]
+  | h::t -> (subsets t) @ [for i in subsets t -> i @ [h]]
 
-subsets2 [1; 2; 3; 4]
+// example
+[1; 2; 3; 4] |> List.rev |> subsets |> List.sortBy(fun y -> y |> List.length)
