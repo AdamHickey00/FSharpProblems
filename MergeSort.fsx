@@ -1,24 +1,21 @@
 open System.Linq
 
 // recursive merge sort
-let rec combine x y = 
-  match x,y with 
-  | [],_ -> y 
-  | _,[] -> x 
-  | xHead::xTail, yHead::yTail ->
-    if xHead < yHead then
-      xHead :: (combine xTail y)
-    else 
-      yHead :: (combine x yTail)
+let rec combine a b =
+  match a,b with 
+  | [],_ -> b 
+  | _,[] -> a 
+  | aH::aT,bH::_ when aH < bH -> aH :: (combine aT b)
+  | aH::_,bH::bT -> bH :: (combine a bT) 
 
-let rec mergeSort x = 
-  match x with 
+let rec mergeSort = function 
   | [] -> []
-  | [v] -> [v]
-  | _ -> let half = (x |> List.length) / 2
-         let first = mergeSort(x.Take(half) |> List.ofSeq)
-         let second = mergeSort(x.Skip(half) |> List.ofSeq)
-         combine first second  
+  | [_] as x -> x 
+  | h::t as x -> 
+    let half = (x |> List.length)/2 
+    let first = x.Take(half) |> List.ofSeq |> mergeSort
+    let second = x.Skip(half) |> List.ofSeq |> mergeSort
+    combine first second
 
 mergeSort [5; 3]
 mergeSort [5;9;2;0;88;9]

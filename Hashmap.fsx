@@ -9,7 +9,6 @@ let insert key value (HashMap items) =
 
 let get key (HashMap items) = 
    let hash = hashcode key 31
-   printfn "hash=%A" hash
    items.[hash]
 
 let input = HashMap (Array.create 31 "")
