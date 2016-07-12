@@ -9,13 +9,39 @@ type Suit =
 
 type Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Jack | Queen | King | Ace
 type Card = Rank*Suit
-type Deck = Card list 
+type Deck = Card list
 
+type Score = 
+  | Good of int
+  | Bust
+
+type AceScore = {
+  AceHigh:Score 
+  AceLow:Score
+}
+
+let scoreWithAce aceValue (card:Card) =
+  match card with 
+  | (Two,_) -> 2 | (Three,_) -> 3 | (Four,_) -> 4 | (Five,_) -> 5 | (Six,_) -> 6 | (Seven,_) -> 7 | (Eight,_) -> 8 | (Nine,_) -> 9 | (Ten,_) | (Jack,_) | (Queen,_) | (King,_) -> 10 | (Ace,_) -> aceValue
+
+let scoreAceHigh = scoreWithAce 11
+let scoreAceLow = scoreWithAce 1
+
+let score cards = 
+  let high = cards |> List.map scoreAceHigh |> List.sum
+  let low = cards |> List.map scoreAceLow |> List.sum
+  
+  match high,low with 
+  | _,_ when high > 21 && low > 21 -> {AceHigh=Bust; AceLow=Bust} 
+  | _,_ when high > 21 -> {AceHigh=Bust; AceLow=Good low}
+  | _,_ -> {AceHigh=Good high; AceLow=Good low}
+  
 type BlackJackHand = {
   FirstCard:Card
   SecondCard:Card
-  Cards:Card list
-}
+  Cards:Card list  
+} with 
+  member this.Score = (this.FirstCard :: this.SecondCard :: this.Cards) |> score 
 
 type BlackJackGame = {
   Deck:Deck
@@ -78,3 +104,4 @@ let deal numPlayers =
   }
 
 let initialHand = deal 2
+initialHand.Dealer.Score :: (initialHand.Players |> List.map(fun x -> x.Score))
